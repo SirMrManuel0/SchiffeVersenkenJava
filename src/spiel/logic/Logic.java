@@ -2,6 +2,7 @@ package spiel.logic;
 
 import java.awt.Point;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Random;
 import spiel.logic.*;
 
@@ -16,11 +17,20 @@ public class Logic {
 	private ArrayList<Point> Hits;
 	
 	private int Gegner;
+	private int x;
+	private int y;
 	private boolean[][] Feld;
 	
 	public Logic(int Felder, int Gegner, int D) throws Exception {
-		if (D == ONE_DIMENSIONAL) Feld = new boolean[1][Felder];
-		else if (D == TWO_DIMENSIONAL) Feld = new boolean[Felder][Felder];
+		if (D == ONE_DIMENSIONAL) {
+			Feld = new boolean[1][Felder];
+			y = 1;
+			x = Felder;
+		}
+		else if (D == TWO_DIMENSIONAL) {
+			Feld = new boolean[Felder][Felder];
+			x = y = Felder;
+		}
 		else throw new Exception();
 		
 		Gen = new Random();
@@ -33,24 +43,47 @@ public class Logic {
 	}
 	
 	private void initFeld() {
-		
-		int amountEn = 0;
-		
-		for (int i = 0; i < Feld.length; i++) {
-			for (int ii = 0; ii < Feld[i].length; ii++) {
-				if (amountEn < Gegner) {
-					boolean Generated = Gen.nextBoolean();
-					Feld[i][ii] = Generated;
-					if (Generated) amountEn ++;
+		int amountFelder = y*x;
+		int[] GegnerPosition = new int[Gegner];
+		int pos = 0;
+
+		while (hasDuplicate(GegnerPosition)){
+			for (int i = 0; i < Gegner; i++){
+				GegnerPosition[i] = Gen.nextInt(1, amountFelder);
+			}
+		}
+
+		Arrays.sort(GegnerPosition);
+
+		int countFeld = 1;
+		int GegnerCount = 1;
+		for (int i = 0; i < y; i++) {
+			for (int ii = 0; ii < x; ii++) {
+				if (countFeld == GegnerPosition[pos]) {
+					if (GegnerCount == Gegner) continue;
+					Feld[i][ii] = true;
+					pos ++;
+					GegnerCount ++;
 				} else {
 					Feld[i][ii] = false;
 				}
+				countFeld ++;
 			}
 		}
-		
-		if (amountEn < Gegner) initFeld();
+
+		if (amountTrue(Feld) != Gegner) initFeld();
 	}
-	
+
+	private int amountTrue(boolean[][] array){
+		int count = 0;
+		for (boolean[] b_ : array){
+			for (boolean b : b_){
+				if (b) count ++;
+			}
+		}
+		return count;
+	}
+
 	private void shotListener(int kind) {
 		for (GameListener lis : Listeners) {
 			lis.shot(kind);
@@ -61,6 +94,18 @@ public class Logic {
 		for (GameListener lis : Listeners) {
 			lis.gameOver();
 		}
+	}
+
+	private boolean hasDuplicate(int[] array) {
+		if (array.length == 0) return true;
+		for (int i = 0; i < array.length - 1; i++) {
+			for (int j = i + 1; j < array.length; j++) {
+				if (array[i] == array[j]) {
+					return true;
+				}
+			}
+		}
+		return false;
 	}
 	
 	
@@ -85,7 +130,10 @@ public class Logic {
 	
 	public void setFeldRect(int x, int y) {
 		if (x <= 0 || y <= 0) return;
-		Feld = new boolean[x][y];
+		if (x == 1 && y == 1) return;
+		Feld = new boolean[y][x];
+		this.x = x;
+		this.y = y;
 		initFeld();
 	}
 	
