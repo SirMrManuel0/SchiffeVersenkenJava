@@ -5,9 +5,10 @@ import java.awt.event.*;
 import java.awt.*;
 import javax.swing.*;
 
+import spiel.gui.Point.*;
 import spiel.logic.*;
 
-public class Main extends JFrame implements GameListener, ActionListener, PointListener{
+public class Main extends JFrame implements GameListener, ActionListener, PointListener {
 
 	private final int FELD_SIZE = 60;
 
@@ -72,9 +73,9 @@ public class Main extends JFrame implements GameListener, ActionListener, PointL
 		JButton submit = new JButton("Bestätigen");
 		submit.addActionListener(this);
 		
-		JLabel GegnerLab = new JLabel("Gegner: ");
-		JLabel SizeXLab = new JLabel("SizeX: ");
-		JLabel SizeYLab = new JLabel("SizeY: ");
+		JLabel GegnerLab = new JLabel("Gegner (max. Anzahl an Felder durch 2): ");
+		JLabel SizeXLab = new JLabel("SizeX (max. 10): ");
+		JLabel SizeYLab = new JLabel("SizeY (max. 10): ");
 		JLabel submitLab = new JLabel("Ändern: ");
 		JPanel header = new JPanel();
 		//header.setBackground(Color.blue);
@@ -168,7 +169,7 @@ public class Main extends JFrame implements GameListener, ActionListener, PointL
 
 		if (intSizeX > 10) intSizeX = 10;
 		if (intSizeY > 10) intSizeY = 10;
-		if (gegner > 50) gegner = 50;
+		if (gegner > (intSizeX*intSizeY)) gegner = (intSizeX * intSizeY) / 2;
 
 		dispose();
 		new Main(intSizeX, intSizeY, gegner);

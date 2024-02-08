@@ -1,4 +1,4 @@
-package spiel.gui;
+package spiel.gui.Point;
 import javax.swing.*;
 import javax.swing.border.Border;
 import java.awt.*;

@@ -1,4 +1,4 @@
-package spiel.gui;
+package spiel.gui.Point;
 
 public class PointEvent {
     private PointPanel source;
