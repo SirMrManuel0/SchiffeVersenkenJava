@@ -74,9 +74,9 @@ public class Main extends JFrame implements GameListener, ActionListener, PointL
 		submit.addActionListener(this);
 		
 		JLabel GegnerLab = new JLabel("Gegner (max. Anzahl an Felder durch 2): ");
-		JLabel SizeXLab = new JLabel("SizeX (max. 10): ");
-		JLabel SizeYLab = new JLabel("SizeY (max. 10): ");
-		JLabel submitLab = new JLabel("Ändern: ");
+		JLabel SizeXLab = new JLabel("Höhe (max. 10): ");
+		JLabel SizeYLab = new JLabel("Breite (max. 10): ");
+		JLabel submitLab = new JLabel("");
 		JPanel header = new JPanel();
 		//header.setBackground(Color.blue);
 		header.setBounds(0,0,620,60);

@@ -4,7 +4,6 @@ import java.awt.Point;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Random;
-import spiel.logic.*;
 
 public class Logic {
 	
@@ -47,10 +46,15 @@ public class Logic {
 		int[] GegnerPosition = new int[Gegner];
 		int pos = 0;
 
-		while (hasDuplicate(GegnerPosition)){
-			for (int i = 0; i < Gegner; i++){
-				GegnerPosition[i] = Gen.nextInt(1, amountFelder);
-			}
+		for (int i = 0; i < Gegner; i++){
+			GegnerPosition[i] = Gen.nextInt(1, amountFelder);
+		}
+
+		while (hasDuplicate(GegnerPosition)) {
+			int[] duplicates = getDuplicatesIndex(GegnerPosition);
+
+			for (int index : duplicates) GegnerPosition[index] = Gen.nextInt(1, amountFelder);
+
 		}
 
 		Arrays.sort(GegnerPosition);
@@ -72,6 +76,21 @@ public class Logic {
 		}
 
 		if (amountTrue(Feld) != Gegner) initFeld();
+	}
+
+	private int[] getDuplicatesIndex(int[] array){
+		ArrayList<Integer> Duplicates = new ArrayList<>();
+
+		for (int i = 0; i < array.length; i++){
+			for (int j = i + 1; j < array.length; j++){
+				if (array[i] == array[j]) Duplicates.add(i);
+			}
+		}
+
+		int[] duplicates_return = new int[Duplicates.size()];
+		for (int i = 0; i < Duplicates.size(); i++) duplicates_return[i] = Duplicates.get(i);
+
+		return duplicates_return;
 	}
 
 	private int amountTrue(boolean[][] array){
@@ -122,7 +141,7 @@ public class Logic {
 			Hits.add(new Point(x,y));
 			Gegner -= 1;
 			shotListener(GameListener.SHOOT_HIT);
-			if (Gegner == 0) GameOver();
+			if (Gegner <= 0) GameOver();
 		} else {
 			shotListener(GameListener.SHOOT_MISS);
 		}
